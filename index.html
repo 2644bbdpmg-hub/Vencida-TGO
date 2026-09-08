@@ -370,13 +370,16 @@ td.sub{font-size:9.5px;color:var(--tx3);font-weight:500}
   </div>
 
   <div class="secttl">Tendencia semanal <span class="hint">Clic en una semana para saltar a ella · clic en el nombre de una serie para ocultarla o mostrarla</span></div>
-  <div class="row r2">
+  <div class="row r3">
     <div class="pn"><div class="ph"><div><h3><span class="dot"></span>Plan de cobranza y cobranza real</h3>
       <div class="st" id="st1"></div></div></div>
       <div id="c1"></div></div>
     <div class="pn"><div class="ph"><div><h3><span class="dot" style="background:var(--bad)"></span>Clientes sin visitar y cobertura</h3>
       <div class="st" id="st3"></div></div></div>
       <div id="c3"></div></div>
+    <div class="pn"><div class="ph"><div><h3><span class="dot" style="background:var(--slate)"></span>Portafolio y pago requerido</h3>
+      <div class="st" id="st11"></div></div></div>
+      <div id="c11"></div></div>
   </div>
   <div class="row r3">
     <div class="pn"><h3><span class="dot" style="background:var(--vio)"></span>Eficiencia de cobranza</h3>
@@ -397,7 +400,7 @@ td.sub{font-size:9.5px;color:var(--tx3);font-weight:500}
       <div class="st">Contactación, contacto efectivo y promesas</div>
       <div id="c7"></div></div>
   </div>
-  <div class="row r2">
+  <div class="row r3">
     <div class="pn"><div class="ph"><div><h3><span class="dot" style="background:var(--bad)"></span>Cuánto dinero rueda a 14</h3>
       <div class="st" id="st10"></div></div></div>
       <div id="c10"></div>
@@ -405,8 +408,6 @@ td.sub{font-size:9.5px;color:var(--tx3);font-weight:500}
     <div class="pn"><div class="ph"><div><h3><span class="dot" style="background:var(--vio)"></span>Pase de semana 13 a 14</h3>
       <div class="st" id="st8"></div></div></div>
       <div id="c8"></div></div>
-  </div>
-  <div class="row r2">
     <div class="pn"><h3><span class="dot" style="background:var(--vio)"></span>Gestión temprana contra fuga</h3>
       <div class="st">% de clientes gestionados entre el día 7 y el 13, contra el % de cartera que rueda a 14</div>
       <div id="c9"></div></div>
@@ -1144,6 +1145,11 @@ function renderCharts(){
   chart($('#c3'),{h:230,bars:[{n:'Sin visitar',d:g('sinvis'),c:'#f0a3ab',f:v=>nf(v)}],
     lines:withNat([{n:'% visitados',d:g('pvis'),c:'#0d9f6e',r:1,f:P}],'pvis',P,true),
     fy:v=>nf(v),fr:v=>pc(v,0)});
+  /* tamaño de la cartera a cobrar: el dinero pedido y cuántas cuentas lo deben */
+  chart($('#c11'),{h:240,bars:[{n:'Pago requerido',d:g('pagoreq'),c:'#c9d3e4',f:mny}],
+    lines:[{n:'Portafolio',d:g('port'),c:'#7c3aed',r:1,f:v=>nf(v)+' cuentas'},
+           {n:'Clientes',d:g('cli'),c:'#2563eb',r:1,f:v=>nf(v)+' clientes'}],
+    fy:mny,fr:v=>nf(v)});
   chart($('#c2'),{h:200,pr:20,lines:withNat([{n:'10 a 25',d:g('ef25'),c:'#7c3aed',area:1,f:P2},
     {n:'10 a 13',d:g('ef13'),c:'#2563eb',f:P2}],'ef25',P2,false),fy:v=>pc(v,1)});
   chart($('#c5'),{h:200,pl:38,pr:36,lines:withNat([{n:'Días',d:g('dias'),c:'#0d9f6e',f:v=>nf(v,2)},
@@ -1176,6 +1182,10 @@ function renderCharts(){
     +(víaR===1?' · <span style="color:var(--tx3)">cobranza real reconstruida del cumplimiento por plan</span>':'')
     +(víaR===2?' · <span style="color:var(--wr)">cobranza estimada con el monto cobrado</span>':'');
   $('#st3').textContent=`Semana ${wkLb(S[wi])} · ${nf(g('sinvis')[wi])} de ${nf(g('cli')[wi])} clientes sin visita`;
+  const pq=g('pagoreq')[wi], cl2=g('cli')[wi];
+  $('#st11').textContent = pq==null?'Sin dato en esta semana'
+    :`Semana ${wkLb(S[wi])} · ${mnyF(pq)} por cobrar entre ${nf(cl2)} clientes`
+      +(cl2?` · ${mnyF(Math.round(pq/cl2))} en promedio cada uno`:'');
   $('#st8').textContent=g('c13')[wi]==null?'Sin dato de pase en esta semana'
     :`Semana ${wkLb(S[wi])} · ${mnyF(g('cpr')[wi])} de ${mnyF(g('c13')[wi])} rodó a 14 o quedó en riesgo`;
   const T=c13[wi], R=cpr[wi], C=contenido[wi];
