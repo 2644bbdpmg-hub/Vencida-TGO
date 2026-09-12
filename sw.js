@@ -1,7 +1,7 @@
 /* Guarda el tablero en el dispositivo para que abra sin internet.
    Al publicar una semana nueva, cambia CACHE por la versión siguiente
    y el navegador descarta la copia vieja solo. */
-const CACHE = 'tgo-vencida-v6';
+const CACHE = 'tgo-vencida-v11';
 const ARCHIVOS = ['./', './index.html', './manifest.json',
   './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png'];
 
